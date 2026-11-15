@@ -20,11 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
@@ -81,6 +77,12 @@ class ImagePreprocessor implements Serializable {
             final List<String> targFileArg =
                     Collections.singletonList(targFile.toAbsolutePath().toString());
 
+            final List<String> customEnvArgs = new ArrayList<>();
+            if (System.getenv("TIKA_OCR_IMAGE_PROCESSOR_ARGS") != null) {
+                String[] envArgs =  System.getenv("TIKA_OCR_IMAGE_PROCESSOR_ARGS").split(",");
+                customEnvArgs.addAll(Arrays.asList(envArgs));
+            }
+
             Stream<List<String>> stream = Stream.empty();
             if (angle == 0) {
                 if (config.isEnableImagePreprocessing()) {
@@ -98,7 +100,8 @@ class ImagePreprocessor implements Serializable {
                 // Just rotation
                 stream = Stream.of(sourceFileArg, rotate, targFileArg);
             }
-            final String[] args = stream.flatMap(Collection::stream).toArray(String[]::new);
+            final String[] args = Stream.concat(stream, Stream.of(customEnvArgs))
+                .flatMap(Collection::stream).toArray(String[]::new);
             commandLine.addArguments(args, true);
             DefaultExecutor executor = DefaultExecutor.builder().get();
             try {
