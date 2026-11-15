@@ -145,7 +145,7 @@ public class CleanPhoneText {
                     // now do letter for digit substitutions
                     {{"oh", "0"}, {"o", "0"}, {"i", "1"}, {"l", "1"}}};
     // Regex to identify a phone number
-    static final String cleanPhoneRegex = "([2-9]\\d{2}[2-9]\\d{6})";
+    static final String cleanPhoneRegex = "^(\\+?1[-.\\s]?)?(\\(?\\d{3}\\)?[-.\\s]?)?(\\d+[-.\\s]?)*\\d{4}$";
     // Regex which attempts to ignore punctuation and other distractions.
     static final String phoneRegex =
             "([{(<]{0,3}[2-9][\\W_]{0,3}\\d[\\W_]{0,3}\\d[\\W_]{0,6}" +
