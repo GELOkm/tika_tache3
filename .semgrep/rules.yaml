@@ -1,0 +1,10 @@
+rules:
+  - id: custom-redos
+    languages: [java]
+    severity: ERROR
+    message: "The regular expression $REGEX seems vulnerable to regular expression denial of service (ReDoS)"
+    patterns:
+      - pattern: '"$REGEX"'
+      - metavariable-analysis:
+          metavariable: $REGEX
+          analyzer: redos

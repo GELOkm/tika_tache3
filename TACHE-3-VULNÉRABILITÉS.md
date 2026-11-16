@@ -46,3 +46,11 @@ _Attaquant_ : Fournit une entrée spécialement conçue pour exploiter la vulné
 service causé par une explosion de complexité dans le traitement du regex (validé
 via [regex101.com](https://regex101.com/?regex=%5E%28%5C%2B%3F1%5B-.%5Cs%5D%3F%29%3F%28%5C%28%3F%5Cd%7B3%7D%5C%29%3F%5B-.%5Cs%5D%3F%29%3F%28%5Cd%2B%5B-.%5Cs%5D%3F%29*%5Cd%7B4%7D%24&testString=1111111111111111111111111x&flags=gm&flavor=java&delimiter=%22)).
 
+**Remarque** :
+
+Nous nous sommes rendus compte que la règle de détection pour ReDoS ne s'appliquait pas à Java. Nous avons donc
+introduit une régle personnalisée basée
+sur [la règle de détection ReDoS pour C++.](https://semgrep.dev/playground/r/0xdea.c.regex-dos.raptor-regex-dos?editorMode=advanced)
+
+---
+
