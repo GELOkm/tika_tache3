@@ -31,6 +31,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # Accorder au token le droit de commenter pour afficher le Rick Roll
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
     strategy:
       matrix:
         java: [ '17' ]
@@ -47,6 +52,21 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg libimage-exiftool-perl
       - name: Build with Maven
         run: mvn clean apache-rat:check test install javadoc:aggregate -Pci -B "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+      # Étape d'analyse Semgrep
+      - name: Analyse de sécurité Semgrep
+        uses: semgrep/action@v1
+        with:
+          config: "p/java" # Utilise les règles par défaut pour Java pour la vérification
+        env:
+          # Pour comparer avec le commit précédent et détecter que les NOUVELLES failles
+          SEMGREP_BASELINE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+      # Étape pour exécuter le Rick Roll en cas d'échec
+      - name: Rick Roll en cas d'échec
+        if: failure()
+        uses: TejasvOnly/random-rickroll@v1.0 # Utilise l'action reccomandée pour le Rick Roll
+        with:
+          percentage: 100
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   e2e-tests:
     runs-on: ubuntu-latest
