@@ -22,6 +22,14 @@ spéciaux.
 _Attaquant_ : Assigne une valeur spécifique à la variable d'environnement afin d'obtenir la capacité à exécuter une
 commande arbitraire.
 
+**Remarque** :
+
+La première version de la vulnérabilité introduite n'a introduit que l'ajout d'une entrée vulnérable via `getenv()`.
+Lors de l'exécution de semgrep, nous avons remarqué que cette vulnérabilité n'avait pas été identifié. Après avoir
+appris à interpréter les règles de semgrep, nous avons compris que la règle de détection ne prenait pas en charge la
+librairie d'Apache (`org.apache.commons.exec`) ainsi que d'autres différences qui ont fait passer la vulnérabilité sous
+le radar. Nous l'avons donc modifiée pour rendre cette vulnérabilité détectable.
+
 ---
 
 #### 2. Déni de service

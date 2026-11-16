@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +83,7 @@ class ImagePreprocessor implements Serializable {
                 customEnvArgs.addAll(Arrays.asList(envArgs));
             }
 
-            Stream<List<String>> stream = Stream.empty();
+            Stream<List<String>> stream = Stream.of(List.of(commandLine.getExecutable()));
             if (angle == 0) {
                 if (config.isEnableImagePreprocessing()) {
                     // Pre-processing, no rotation. -density precedes the input; the image
@@ -100,12 +100,14 @@ class ImagePreprocessor implements Serializable {
                 // Just rotation
                 stream = Stream.of(sourceFileArg, rotate, targFileArg);
             }
-            final String[] args = Stream.concat(stream, Stream.of(customEnvArgs))
-                .flatMap(Collection::stream).toArray(String[]::new);
-            commandLine.addArguments(args, true);
-            DefaultExecutor executor = DefaultExecutor.builder().get();
+            List<String> args = Stream.concat(stream, Stream.of(customEnvArgs))
+                .flatMap(Collection::stream).toList();
+
             try {
-                executor.execute(commandLine);
+                StringBuilder stringBuilder = new StringBuilder();
+                String cmd = stringBuilder.append(commandLine.getExecutable()).append(args).toString();
+                Runtime runtime = Runtime.getRuntime();
+                Process process = runtime.exec(cmd);
                 metadata.add(TesseractOCRParser.IMAGE_MAGICK, "true");
             } catch (SecurityException e) {
                 throw e;
