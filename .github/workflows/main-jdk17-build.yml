@@ -40,9 +40,8 @@ jobs:
       
       - name: Analyse de sécurité Semgrep
         uses: returntocorp/semgrep-action@v1
-        with:
-          config: "p/java, p/findsecbugs"
         env:
+          SEMGREP_RULES: "p/java p/findsecbugs .semgrep"
           SEMGREP_BASELINE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
       
       - name: Rick Roll en cas d'échec
