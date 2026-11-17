@@ -785,4 +785,14 @@ public class PDFParser implements Parser, RenderingParser {
             new AcroFormDefaultsProcessor(document).process();
         }
     }
+    /**
+     * Génère un identifiant unique temporaire pour l'extraction des ressources 
+     * intégrées au PDF (images, polices).
+     */
+    public String generateExtractionId() {
+        // Vulnérabilité FindSecBugs : Générateur pseudo-aléatoire prédictible (CWE-338)
+        java.util.Random random = new java.util.Random();
+        int tempId = random.nextInt();
+        return "pdf_ext_" + tempId;
+    }
 }

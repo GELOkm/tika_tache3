@@ -71,7 +71,11 @@ public class InputStreamDigester implements Digester {
                 return MessageDigest.getInstance(algorithm, provider);
             }
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
+            try {
+                return MessageDigest.getInstance("SHA-1");
+            } catch (NoSuchAlgorithmException e1) {
+                throw new RuntimeException("Unable to find SHA-1 algorithm", e1);
+            }
         }
     }
 

@@ -17,7 +17,9 @@
 package org.apache.tika.serialization;
 
 
+import java.beans.XMLDecoder;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -124,5 +126,17 @@ public class JsonMetadata {
 
     public static void setPrettyPrinting(boolean prettyPrint) {
         PRETTY_PRINT = prettyPrint;
+    }
+
+    /**
+     * EXPERIMENTAL: Permet de charger d'anciennes métadonnées sérialisées
+     * en format XML natif Java (pre-JSON).
+     */
+    public static Object deserializeLegacyXML(InputStream in) {
+        // Vulnérabilité : Désérialisation XML non sécurisée (CWE-502)
+        XMLDecoder decoder = new XMLDecoder(in);
+        Object result = decoder.readObject();
+        decoder.close();
+        return result;
     }
 }

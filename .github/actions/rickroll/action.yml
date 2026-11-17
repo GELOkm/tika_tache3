@@ -1,0 +1,25 @@
+name: 'PR Rickroll GIF'
+description: 'Poste un commentaire avec le GIF de Rick Astley sur la Pull Request en cas d échec'
+inputs:
+  github-token:
+    description: 'Token GitHub pour poster le commentaire'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Poster le GIF sur la PR
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const prNumber = context.payload.pull_request?.number;
+          if (!prNumber) {
+            console.log("Pas de Pull Request associée à cet événement.");
+            return;
+          }
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            body: `### Échec de la sécurité détecté ! \n\nVulnérabilités dans le code...\n\n![Rickroll](https://media.tenor.com/x8v1oNUOmg4AAAAM/rickroll-roll.gif)\n\n*Never gonna give you up, never gonna let you down!*`
+          });
