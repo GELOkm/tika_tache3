@@ -2,17 +2,26 @@
 
 #### 1. Détection des nouvelles vulnérabilités avec Semgrep
 **Choix de conception et d'implémentation :**
-Pour intégrer Semgrep, nous avons choisi d'utiliser l'action officielle `semgrep/action@v1` au lieu d'une installation manuelle, ce qui rend le workflow plus maintenable. 
-Nous avons défini la variable d'environnement `SEMGREP_BASELINE_REF` pour trouver que les nouvelles vulnérabilités.
+Nous avons configuré le workflow `.github/workflows/main-jdk17-build.yml` en exécutant directement le conteneur Docker officiel de Semgrep (`semgrep/semgrep`). 
 
-Pour faire cela:
-1. Nous avons ajouté `fetch-depth: 0` à l'étape `actions/checkout` pour que l'action télécharge l'historique complet des commits, pour que Semgrep puisse faire un `git diff`.
-2. Nous avons configuré l'action avec `config: "p/java, p/findsecbugs"`, car plusieurs de nos vulnérabilités injectées dépendent des règles plus avancées de FindSecBugs.
+Au début, on voulait utiliser l'action `returntocorp/semgrep-action@v1`. Le problème est qu'elle écrasait la configuration pour n'exécuter que notre dossier local `.semgrep`, ignorant les règles que nous avions écrites. Le passage au CLI officiel via Docker nous a permis de combiner trois sources de règles :
+1. **`p/java` et `p/findsecbugs` :** Pour détecter les vulnérabilités classiques de l'écosystème Java (injection de commandes OS, traversal de chemin, désérialisation XML, algorithmes cryptographiques et aléatoires faibles).
+2. **`.semgrep` :** Pour appliquer notre règle personnalisée (`semgrep.custom-redos`) ciblant les expressions régulières vulnérables au déni de service (ReDoS).
+
+pour ne trouver que les nouvelles vulnérabilités, nous avons :
+* Configuré l'étape `actions/checkout@v4` avec `fetch-depth: 0` pour récupérer l'historique complet des commits Git.
+* Utilisé l'option `--baseline-commit "${{ github.event.pull_request.base.sha }}"` et le drapeau `--error` pour bloquer le pipeline (`exit code 1`) dès qu'une nouvelle vulnérabilité est détectée.
+* Placé l'analyse Semgrep en haut de la compilation Maven pour éviter d'attendre après des tests d'intégration complets.
 
 **Validation :**
-Nous avons validé cette modification en exécutant le workflow sur un nouveau commit. Le système a comparé l'état actuel à l'état précédent et a correctement fait échouer le build en identifiant exactement nos 7 nouvelles vulnérabilités.
+Lors de l'exécution sur notre Pull Request, Semgrep a analysé les 7 fichiers modifiés avec 185 règles Java et a bloqué le pipeline avec succès en remontant 11 alertes bloquantes couvrant nos 6 types de vulnérabilités distinctes (CWE-22, CWE-78, CWE-328, CWE-338, CWE-502 et CWE-1333).
+
+![alt text](image.png)
 
 #### 2. Implémentation du "Rickroll" (Humour)
-**Choix de conception :**
-Pour satisfaire le critère d'humour, nous avons intégré l'action existante recommandée `TejasvOnly/random-rickroll@v1.0` à la fin de notre bloc de jobs. Nous avons configuré l'étape avec la condition `if: failure()` pour qu'elle s'exécute si le build Maven échoue ou si Semgrep détecte une nouvelle faille.
-Le paramètre `percentage: 100` a été forcé pour s'assurer que le Rickroll s'affiche à 100% des cas d'échec sous forme de commentaire automatique sur la Pull Request (grâce aux permissions `pull-requests: write` accordées au `GITHUB_TOKEN`).
+**Choix de conception et résolution des contraintes :**
+Pour le rickroll, nous avons d'abord testé l'action reccomandée `TejasvOnly/random-rickroll@v1.0`. Toutefois, cette action est conçue uniquement pour les *Issues* GitHub (`context.payload.issue`) et échouait constamment sur une Pull Request avec l'erreur `Error: No issue found`.
+
+Pour contourner cela, nous avons développé notre propre implémentation utilisant l'action officielle `actions/github-script@v7` avec la permission `pull-requests: write` sur le `GITHUB_TOKEN`. Grâce à la condition `if: failure()`, le script s'exécute automatiquement dès que Semgrep fait échouer le build et publie un commentaire contenant le GIF animé de Rick Astley directement dans les commentaires de la PR.
+
+![alt text](rickroll_screen.png)
