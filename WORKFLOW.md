@@ -14,8 +14,10 @@ pour ne trouver que les nouvelles vulnérabilités, nous avons :
 * Placé l'analyse Semgrep en haut de la compilation Maven pour éviter d'attendre après des tests d'intégration complets.
 
 **Validation :**
-Lors de l'exécution sur notre Pull Request, Semgrep a analysé les 7 fichiers modifiés avec 185 règles Java et a bloqué le pipeline avec succès en remontant 11 alertes bloquantes couvrant nos 6 types de vulnérabilités distinctes (CWE-22, CWE-78, CWE-328, CWE-338, CWE-502 et CWE-1333).
+Lors de l'exécution sur notre Pull Request, Semgrep a analysé les 7 fichiers modifiés avec 219 règles Java et a bloqué le pipeline avec succès en remontant 12 alertes bloquantes couvrant nos 7 types de vulnérabilités distinctes.
+L'ajout des paquets p/owasp-top-ten et p/security-audit nous a permis de lever la 12ᵉ alerte sur OOXMLParser.java
 
+![alt text](image-1.png)
 ![alt text](image.png)
 
 #### 2. Implémentation du "Rickroll" (Humour)
