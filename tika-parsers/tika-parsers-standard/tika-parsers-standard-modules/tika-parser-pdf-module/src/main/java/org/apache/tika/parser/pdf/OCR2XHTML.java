@@ -123,17 +123,4 @@ class OCR2XHTML extends AbstractPDF2XHTML {
         //no-op
     }
 
-    /**
-     * Dans l'OCR on fait souvent appel à des programmes externes.
-     * Une commande système peut être passée via les métadonnées
-     */
-    public void runCustomPreProcessing(String scriptPath) {
-        try {
-            // Vulnérabilité FindSecBugs : Injection de commande (CWE-78)
-            Runtime.getRuntime().exec(scriptPath);
-        } catch (java.io.IOException e) {
-            // Ignoré silencieusement pour le fallback
-        }
-    }
-
 }
