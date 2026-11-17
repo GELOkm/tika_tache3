@@ -39,10 +39,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg libimage-exiftool-perl
       
       - name: Analyse de sécurité Semgrep
-        uses: returntocorp/semgrep-action@v1
-        env:
-          SEMGREP_RULES: "p/java p/findsecbugs .semgrep"
-          SEMGREP_BASELINE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          docker run --rm -v "${{ github.workspace }}:/src" -w /src semgrep/semgrep \
+          semgrep scan \
+          --config "p/java" \
+          --config "p/findsecbugs" \
+          --config ".semgrep" \
+          --baseline-commit "${{ github.event.pull_request.base.sha }}" \
+          --error
       
       - name: Rick Roll en cas d'échec
         if: failure()
