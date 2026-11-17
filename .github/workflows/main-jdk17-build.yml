@@ -50,7 +50,6 @@ jobs:
       
       - name: Rick Roll en cas d'échec
         if: failure()
-        uses: TejasvOnly/random-rickroll@v1.0
+        uses: ./.github/actions/rickroll
         with:
-          percentage: 100
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
