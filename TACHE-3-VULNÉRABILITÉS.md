@@ -104,3 +104,53 @@ _Développeur_ : Introduit un algorithme de hachage de "secours" pour les cas o�
 _Attaquant_ : Crée un fichier spécialement conçu pour générer une collision de hash, ce qui pourrait potentiellement
 créer des problèmes en écrasant des fichiers existants ou en contournant des contrôles d'intégrité.
 
+---
+
+#### 5.
+
+Fichier modifié : `...` (module `...`)
+
+Type de vulnérabilité : ...
+
+**Justification de l'introduction de la vulnérabilité :**
+...
+
+**Mise en scénario** :
+
+_Développeur_ : ...
+
+_Attaquant_ : ...
+
+---
+
+#### 6.
+
+Fichier modifié : `...` (module `...`)
+
+Type de vulnérabilité : ...
+
+**Justification de l'introduction de la vulnérabilité :**
+...
+
+**Mise en scénario** :
+
+_Développeur_ : ...
+
+_Attaquant_ : ...
+
+---
+
+#### 7.
+
+Fichier modifié : `...` (module `...`)
+
+Type de vulnérabilité : ...
+
+**Justification de l'introduction de la vulnérabilité :**
+...
+
+**Mise en scénario** :
+
+_Développeur_ : ...
+
+_Attaquant_ : ...
