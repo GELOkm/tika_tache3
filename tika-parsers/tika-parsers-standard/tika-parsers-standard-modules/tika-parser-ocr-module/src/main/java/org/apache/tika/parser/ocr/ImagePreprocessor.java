@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.exec.CommandLine;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
