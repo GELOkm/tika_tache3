@@ -1,6 +1,6 @@
 name: main jdk17 build
 
-oon:
+on:
   workflow_dispatch: # <-- AJOUT CRITIQUE POUR LE BOUTON MANUEL
   pull_request:
     branches: [ main ]
