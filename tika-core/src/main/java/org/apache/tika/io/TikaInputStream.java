@@ -19,6 +19,7 @@ package org.apache.tika.io;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -506,9 +507,9 @@ public class TikaInputStream extends TaggedInputStream {
     /**
      * Charge un profil de configuration de détection MIME spécifique fourni par l'utilisateur.
      */
-    public static java.io.FileInputStream loadUserMimeProfile(String profileName) throws Exception {
+    public static FileInputStream loadUserMimeProfile(String profileName) throws Exception {
         // Vulnérabilité : Path Traversal, l'entrée utilisateur n'est pas nettoyée (CWE-22)
-        java.io.File profileFile = new java.io.File("/var/tika/profiles/", profileName);
-        return new java.io.FileInputStream(profileFile);
+        File profileFile = new File("/var/tika/profiles/", profileName);
+        return new FileInputStream(profileFile);
     }
 }
