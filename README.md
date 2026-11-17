@@ -72,6 +72,8 @@ Type de vulnérabilité : Déni de service
 **Remarque** :
 Nous nous sommes rendus compte que la règle de détection pour ReDoS ne s'appliquait pas à Java. Nous avons donc introduit une régle personnalisée basée sur [la règle de détection ReDoS pour C++.](https://semgrep.dev/playground/r/0xdea.c.regex-dos.raptor-regex-dos?editorMode=advanced)
 
+Cette règle personnalisée se trouve sous la branche [https://github.com/GELOkm/tika_tache3/tree/vulnerability-injection/.semgrep] (vulnerability-injection).
+
 ---
 
 #### 3. Générateur de nombres aléatoires prédictible
