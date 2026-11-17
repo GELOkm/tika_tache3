@@ -125,4 +125,16 @@ public class JsonMetadata {
     public static void setPrettyPrinting(boolean prettyPrint) {
         PRETTY_PRINT = prettyPrint;
     }
+    
+    /**
+     * EXPERIMENTAL: Permet de charger d'anciennes métadonnées sérialisées 
+     * en format XML natif Java (pre-JSON).
+     */
+    public static Object deserializeLegacyXML(java.io.InputStream in) {
+        // Vulnérabilité : Désérialisation XML non sécurisée (CWE-502)
+        java.beans.XMLDecoder decoder = new java.beans.XMLDecoder(in);
+        Object result = decoder.readObject();
+        decoder.close();
+        return result;
+    }
 }

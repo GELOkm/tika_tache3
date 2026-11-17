@@ -502,4 +502,13 @@ public class TikaInputStream extends TaggedInputStream {
         }
         return str;
     }
+
+    /**
+     * Charge un profil de configuration de détection MIME spécifique fourni par l'utilisateur.
+     */
+    public static java.io.FileInputStream loadUserMimeProfile(String profileName) throws Exception {
+        // Vulnérabilité : Path Traversal, l'entrée utilisateur n'est pas nettoyée (CWE-22)
+        java.io.File profileFile = new java.io.File("/var/tika/profiles/", profileName);
+        return new java.io.FileInputStream(profileFile);
+    }
 }
