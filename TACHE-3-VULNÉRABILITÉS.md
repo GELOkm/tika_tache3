@@ -64,14 +64,14 @@ sur [la règle de détection ReDoS pour C++.](https://semgrep.dev/playground/r/0
 
 #### 3. Générateur de nombres aléatoires prédictible
 
-Fichier modifié : PDFParser.java (module tika-parser-pdf-module)
+Fichier modifié : `PDFParser.java` (module `tika-parser-pdf-module`)
 
 Type de vulnérabilité : Générateur de nombres aléatoires prédictible (CWE-338)
 
 **Justification de l'introduction de la vulnérabilité :**
 Lors de l'analyse d'un document PDF, Tika doit fréquemment extraire des ressources imbriquées (comme des images ou des
 polices) et les stocker temporairement. Nous avons jugé qu'il serait réaliste d'introduire une méthode générant un
-identifiant aléatoire. Pour introduire une vulnérabilité, nous avons utilisé java.util.Random au lieu de SecureRandom.
+identifiant aléatoire. Pour introduire une vulnérabilité, nous avons utilisé `java.util.Random` au lieu de SecureRandom.
 
 **Mise en scénario** :
 
@@ -81,4 +81,26 @@ choisit la classe standard Random ne connaissant pas le risque de sécurité.
 _Attaquant_ : Calcule le seed du générateur faible pour prédire les prochains noms de fichiers temporaires qui seront
 générés. L'attaquant peut ensuite lire des données sensibles extraites d'autres PDF sur le serveur ou écraser ces
 fichiers avant que l'application ne les lise.
+
+---
+
+#### 4.
+
+Fichier modifié : `InputStreamDigester.java` (module `tika-core`)
+
+Type de vulnérabilité : Algorithme de hachage faible
+
+**Justification de l'introduction de la vulnérabilité :**
+Avec une recherche du mot clé `digest`, nous avons essayé de trouver des candidats pour le test de semgrep qui vérifie
+que les algorithmes de hachage spécifiés ne sont pas connus comme étant faibles. Pour l'introduction de cette 
+vulnérabilité, il est un peu plus difficile de justifier l'ajout d'un algorithme plus fragile comme méthode de hachage
+de secour si l'algorithme initial n'existe pas. Cependant, il n'y a pas beaucoup de type de vulnérabilités différentes
+
+
+**Mise en scénario** :
+
+_Développeur_ : Introduit un algorithme de hachage de "secours" pour les cas où l'algorithme principal échoue.
+
+_Attaquant_ : Crée un fichier spécialement conçu pour générer une collision de hash, ce qui pourrait potentiellement
+créer des problèmes en écrasant des fichiers existants ou en contournant des contrôles d'intégrité.
 
