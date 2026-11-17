@@ -180,3 +180,5 @@ La règle `unencrypted-socket` a intercepté la ligne 68 (`try (Socket socket = 
 *Développeur* : Implémente un parseur capable d'aller chercher et lire des documents hébergés sur un réseau distant en utilisant des Sockets Java standards pour plus de simplicité et de compatibilité.
 
 *Attaquant* : Se positionne sur le réseau (attaque de type Man-in-the-Middle ou *sniffing*) et intercepte les paquets de données transférés par le Socket. Puisque la connexion n'est pas chiffrée, l'attaquant peut lire ou altérer les documents pendant leur transfert vers le parseur Tika.
+
+---
