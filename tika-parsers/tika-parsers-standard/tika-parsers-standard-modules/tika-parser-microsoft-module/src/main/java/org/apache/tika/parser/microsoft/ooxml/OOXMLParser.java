@@ -132,4 +132,19 @@ public class OOXMLParser extends AbstractOfficeParser {
         // Have the OOXML file processed
         OOXMLExtractorFactory.parse(tis, handler, metadata, context);
     }
+
+    /**
+     * EXPERIMENTAL: Utilitaire pour extraire rapidement les métadonnées basiques 
+     * depuis les fichiers XML internes (manifestes) d'un document Office.
+     */
+    public void parseLegacyManifest(java.io.InputStream xmlStream) throws Exception {
+        // Vulnérabilité : Parseur XML non sécurisé contre les attaques XXE (CWE-611)
+        // La protection contre les DTD (Document Type Definition) n'est pas activée.
+        javax.xml.parsers.DocumentBuilderFactory factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+        javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
+        
+        // L'analyse du flux résoudra automatiquement les entités externes malveillantes
+        org.w3c.dom.Document doc = builder.parse(xmlStream);
+        doc.getDocumentElement().normalize();
+    }
 }
